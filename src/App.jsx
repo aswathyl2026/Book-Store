@@ -20,7 +20,7 @@ const [isLoading,setIsLoading]=useState(true)
  
 setTimeout(() => {
   setIsLoading(false)
-}, 6000);
+}, 1000);
 
 
   return (
@@ -30,7 +30,7 @@ setTimeout(() => {
         <Route path='/contact' element={<Contact />} />
         <Route path='/books' element={<Books />} />
         <Route path='/login' element={<Auth />} />
-        <Route path='/register' element={<Auth />} />
+        <Route path='/register' element={<Auth insideRegister/>} />
 
         <Route path='/profile/:id' element={<Profile />} />
         <Route path='/books/:id' element={<Books />} />
