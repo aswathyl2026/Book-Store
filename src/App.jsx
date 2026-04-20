@@ -33,7 +33,7 @@ setTimeout(() => {
         <Route path='/register' element={<Auth insideRegister/>} />
 
         <Route path='/profile/:id' element={<Profile />} />
-        <Route path='/books/:id' element={<Books />} />
+        <Route path='/books/:id' element={<View />} />
 
        <Route path='/admin' element={isLoading?<Preloader/>:<AdminDashboard />} /> 
         <Route path='/admin/resource' element={<AdminResource />} /> 

@@ -9,7 +9,7 @@ function Header() {
       <div className="grid grid-cols-3 p-3">
         {/*logo*/}
         <div className="flex items-center">
-          <img width={'50px'} height={'50px'} src="logo1.jpeg" alt="logo"  />
+          <img width={'50px'} height={'50px'} src="/logo1.jpeg" alt="logo"  />
           <h1 className='text-2xl font-bold ml-2 md:hidden'>BOOK STORE</h1>
         </div>
         {/*title*/}
