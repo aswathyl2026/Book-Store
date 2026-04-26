@@ -2,6 +2,11 @@ import React, { useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../../components/Footer'
 import { FaCircleCheck } from 'react-icons/fa6'
+import Edit from '../components/Edit'
+import Upload from '../components/Upload'
+import BookStatus from '../components/BookStatus'
+import PurchaseHistory from '../components/PurchaseHistory'
+
 function Profile() {
   const [current,setCurrent]=useState(1)
   return (
@@ -16,8 +21,9 @@ function Profile() {
           <h1 className="font-black md:text-3xl text-2xl">Username</h1>
           <FaCircleCheck className='text-blue-400 ms-2' />
         </div>
-        Edit
+        <Edit/>
       </div>
+      <p className="text px-20 mt-5 font-bold">bio</p>
       <p className="text-justify md:px-20 px-5 my-5">
         This is your personal space where you can manage your account, explore your reading activity, track your orders, and save books you love. Whether you're building a wishlist, discovering new arrivals, or reviewing your recent purchases, this page keeps everything organized and easy to access. Your reading journey continues here — enjoy exploring, discovering, and collecting stories that inspire you. ✨
       </p>
@@ -31,15 +37,15 @@ function Profile() {
             {/*tabs content*/}
             {
               current==1 &&
-              <div>Upload Book</div>
+              <div><Upload/></div>
             }
               {
               current==2 &&
-             <div>Upload Book Status</div>
+             <div><BookStatus/></div>
             }
               {
               current==3 &&
-               <div>Purchase History</div>
+               <div>P<PurchaseHistory/></div>
             }    
       </div>
        
