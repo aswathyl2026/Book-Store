@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import { FaEye, FaEyeSlash, FaUser } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { registerAPI } from '../services/allAPI'
-
+import { googleLoginAPI, loginAPI, registerAPI } from '../services/allAPI'
+import { ToastContainer, toast } from 'react-toastify';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
 function Auth({ insideRegister }) {
+  const navigate = useNavigate()
   const [togglePassword, setTogglePassword] = useState(false)
   const formik = useFormik({
     initialValues: {
-      username: "",
+      username: "username",
       email: "",
       password: ""
     },
@@ -18,22 +21,70 @@ function Auth({ insideRegister }) {
       email: Yup.string().email("invalid email").required("required"),
       password: Yup.string().required("required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       console.log(values);
       if (insideRegister) {
         handleRegister(values)
-      }else{
-        console.log(login);
-        
+      } else {
+        console.log("login");
+
+        handleLogin(values)
       }
+      resetForm()
 
     }
 
   })
+
+  const handleLogin = async (userData) => {
+    const result = await loginAPI(userData)
+    console.log(result);
+    if (result.status == 200) {
+      toast.success(`welcome ${result.data.user.username}`)
+      sessionStorage.setItem("token", result.data.token)
+      sessionStorage.setItem("user", JSON.stringify(result.data.user))
+      setTimeout(() => {
+        if (result.data.user.role == 'admin') {
+          navigate('/admin')
+        } else {
+          navigate('/')
+        }
+      }, 2000);
+    } else {
+      toast.error(result.response)
+    }
+
+  }
+
   const handleRegister = async (userData) => {
     const result = await registerAPI(userData)
     console.log(result);
-    
+    if (result.status == 201) {
+      toast.success("Registered successfully...please login")
+    } else {
+      toast.error(result.response)
+    }
+    navigate('/login')
+  }
+  const handleGoogleLogin=async(credentialResponse)=>{
+   console.log("inside handlegoogle");
+   console.log(credentialResponse);
+   const {email,name,picture}=jwtDecode(credentialResponse.credential)
+   console.log(email,name,picture);
+   //api
+   const result=await googleLoginAPI({username:name,email,password:"googlepasword",picture})
+   if(result.status==200){
+     toast.success(`welcome ${result.data.user.username}`)
+      sessionStorage.setItem("token", result.data.token)
+      sessionStorage.setItem("user", JSON.stringify(result.data.user))
+      setTimeout(() => {
+        if (result.data.user.role == 'admin') {
+          navigate('/admin')
+        } else {
+          navigate('/')
+        }
+      }, 2000);
+   }
   }
 
   return (
@@ -93,7 +144,7 @@ function Auth({ insideRegister }) {
                 insideRegister ?
                   <button type='submit' className="w-full rounded p-2 bg-green-700">Register</button>
                   :
-                  <button className="w-full rounded p-2 bg-green-700">Login</button>
+                  <button type='submit' className="w-full rounded p-2 bg-green-700">Login</button>
               }
             </div>
             {/*googlr authentication*/}
@@ -101,7 +152,16 @@ function Auth({ insideRegister }) {
               !insideRegister &&
               <div className="my-5 text-center">
                 <p>----------------------------or-----------------------------</p>
-                <p className="mt-2 w-full flex justify-center items-center"> Google Authentication</p>
+                <div className="mt-2 w-full flex justify-center items-center">
+                  <GoogleLogin
+                    onSuccess={credentialResponse => {
+                      handleGoogleLogin(credentialResponse)
+                    }}
+                    onError={() => {
+                      console.log('Login Failed');
+                    }}
+                  />
+                </div>
               </div>
             }
             <div className="my-5 text-center">
@@ -115,6 +175,7 @@ function Auth({ insideRegister }) {
           </form>
         </div>
       </div>
+      <ToastContainer position='top-center' theme='colored' autoClose='3000' />
     </div>
   )
 }
