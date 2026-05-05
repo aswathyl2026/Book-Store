@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FaBars, FaFacebook, FaInstagram, FaPowerOff, FaTwitter, FaUser } from "react-icons/fa";
 import { FaGear } from 'react-icons/fa6';
 import { Link, useNavigate } from 'react-router-dom'
+import axiosInstance from '../../api/axiosInstance'
 function Header() {
   const [toggle, setToggle] = useState(false)
   const [token, setToken] = useState("")
@@ -43,7 +44,7 @@ function Header() {
            :
            <div>
             <button onClick={()=>setDropdown(!dropdown)} className="shadow-sm rounded ms-5 p-1 hover:bg-gray-100">
-             <img width='40px' height={'40px'} style={{borderRadius:'50%'}} src={dp==""?"https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w=":dp} alt="pf" />
+             <img width='40px' height={'40px'} style={{borderRadius:'50%'}} src={dp==""?"https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w=":dp.startsWith('https://lh3.googleusercontent.com')?dp:`${axiosInstance.defaults.baseURL}/uploads/${dp}`}alt="pf" />
             </button>
             {/*dropdown*/}
             {
@@ -71,7 +72,7 @@ function Header() {
            :
            <div className='relative'>
             <button onClick={()=>setDropdown(!dropdown)} className="shadow-sm rounded ms-5 p-1 hover:bg-gray-100">
-             <img width='40px' height={'40px'} style={{borderRadius:'50%'}} src={dp==""?"https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w=":dp} alt="pf" />
+             <img width='40px' height={'40px'} style={{borderRadius:'50%'}} src={dp==""?"https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w=":dp.startsWith('https://lh3.googleusercontent.com/')?dp:`${axiosInstance.defaults.baseURL}/uploads/${dp}`} alt="pf" />
             </button>
             {/*dropdown*/}
             {

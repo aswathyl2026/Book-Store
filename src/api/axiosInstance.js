@@ -1,10 +1,25 @@
 import axios from 'axios'
 
 const axiosInstance= axios.create({
-    baseURL:"http://localhost:3000/",
+    baseURL:"http://localhost:3000",
     timeout:5000
 })
 
+//request interceptors
+axiosInstance.interceptors.request.use(
+    (config)=>{
+        const token=sessionStorage.getItem("token")
+        if(token){
+            config.headers.Authorization=`Bearer ${token}`
+        }
+        return config
+    },
+    (error)=>{
+        return  Promise.reject(error)
+    }
+)
+
+//response interceptors
 axiosInstance.interceptors.response.use(
     (response)=>{
         console.log("respone recieved")
@@ -13,7 +28,7 @@ axiosInstance.interceptors.response.use(
         if(error.response){
             const status=error.response.status
             if(status==401){
-                console.log("unauthorized access.. redirect to login,...");  
+                console.log("unauthorized access..invalid token...");  
             }
              else if(status==404){
                 console.log("API not found");  

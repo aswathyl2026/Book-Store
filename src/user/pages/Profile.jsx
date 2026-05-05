@@ -6,7 +6,7 @@ import Edit from '../components/Edit'
 import Upload from '../components/Upload'
 import BookStatus from '../components/BookStatus'
 import PurchaseHistory from '../components/PurchaseHistory'
-
+import axiosInstance from '../../api/axiosInstance'
 
 function Profile() {
   const [current,setCurrent]=useState(1)
@@ -28,7 +28,7 @@ function Profile() {
       <Header />
       <div style={{ height: '200px' }} className="bg-black"></div>
       <div style={{ width: "230px", height: "230px", borderRadius: "50%", marginTop: "-130px", marginLeft: "75px" }} className="bg-white p-3">
-        <img style={{ width: '200px', height: '200px', borderRadius: '50%' }} src={dp==""?"https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w=":dp} alt="" />
+        <img style={{ width: '200px', height: '200px', borderRadius: '50%' }} src={dp==""?"https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w=":dp.startsWith('https://lh3.googleusercontent.com')?dp:`${axiosInstance.defaults.baseURL}/uploads/${dp}`} alt="" />
       </div>
       <div className="md:flex justify-between px-20 mt-5">
         <div className="flex items-center">
