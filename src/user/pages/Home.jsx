@@ -1,10 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../../components/Footer'
 import { FaSearch } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import { getHomeBookAPI } from '../../services/allAPI'
 
 function Home() {
+  const [homeBook,setHomeBook]=useState([])
+  //console.log(homeBook);
+  
+  useEffect(()=>{
+    getHomeBooks()
+  },[])
+  const getHomeBooks=async()=>{
+    const result=await getHomeBookAPI()
+    if(result.status==200){
+      setHomeBook(result.data)
+    }
+  }
   return (
     <div>
       <Header />
@@ -25,14 +38,21 @@ function Home() {
         <h1 className="text-4xl my-2">Explore Our Latest Collections</h1>
         <div className="md:grid grid-cols-4 my-10 w-full">
           {/*duplicate according to book*/}
-          <div className="shadow rounded p-3 m-4 md:my-0">
-            <img style={{ width: '100%', height: '300px' }} src="https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_360,c_scale,dpr_1.5/jackets/9781408855652.jpg" alt="img" />
+          {
+            homeBook.length>0 ?
+            homeBook?.map(book=>(
+              <div className="shadow rounded p-3 m-4 md:my-0">
+            <img style={{ width: '100%', height: '300px' }} src={book?.imageURL} alt="img" />
             <div className="flex flex-col justify-center items-center mt-4">
-              <h2 className="font-bold text-blue-700 text-xl">Author</h2>
-              <h3 className="text-lg">Title</h3>
-              <p className="font-bold text-red-500">Price</p>
+              <h2 className="font-bold text-blue-700 text-xl">{book?.author}</h2>
+              <h3 className="text-lg">{book?.title}</h3>
+              <p className="font-bold text-red-500">$ {book?.discountPrice}</p>
             </div>
           </div>
+            ))
+            :
+            <p className="font-bold-text-center my-3">Loading...</p>
+          }
           
         </div>
         <div className="text-center my-10">
