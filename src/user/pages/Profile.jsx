@@ -59,7 +59,7 @@ function Profile() {
             }
               {
               current==3 &&
-               <div>P<PurchaseHistory/></div>
+               <div><PurchaseHistory/></div>
             }    
       </div>
        

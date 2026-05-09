@@ -15,6 +15,8 @@ import Pnf from './pages/Pnf'
 
 import Preloader from './components/Preloader'
 import { useState } from 'react'
+import PaymentSuccess from './user/pages/PaymentSuccess'
+import PaymentFail from './user/pages/PaymentFail'
 function App() {
 const [isLoading,setIsLoading]=useState(true)
  
@@ -34,6 +36,9 @@ setTimeout(() => {
 
         <Route path='/profile/:id' element={<Profile />} />
         <Route path='/books/:id' element={<View />} />
+
+        <Route path='/success' element={<PaymentSuccess />} />
+        <Route path='/cancel' element={<PaymentFail/>} />
 
        <Route path='/admin' element={isLoading?<Preloader/>:<AdminDashboard />} /> 
         <Route path='/admin/resource' element={<AdminResource />} /> 

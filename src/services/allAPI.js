@@ -26,3 +26,27 @@ export const bookUploadAPI=async (bookData)=>{
 export const getHomeBookAPI=async ()=>{
     return await apiService("GET",'/home-books',{})
 }
+
+export const getAllBookAPI=async (searchKey)=>{
+    return await apiService("GET",`/all-books?search=${searchKey}`,{})
+}
+
+export const getAllUserBookAPI=async ()=>{
+    return await apiService("GET",'/user-books',{})
+}
+
+export const getAllBoughtBookAPI=async ()=>{
+    return await apiService("GET",'/bought-books',{})
+}
+
+export const deleteBookAPI=async (bookId)=>{
+    return await apiService("DELETE",`/books/${bookId}`,{})
+}
+
+export const viewBookAPI=async (bookId)=>{
+    return await apiService("GET",`/books/${bookId}`,{})
+}
+
+export const buyBookAPI=async (bookId)=>{
+    return await apiService("PUT",`/books/${bookId}/buy`,{})
+}
