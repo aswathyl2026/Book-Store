@@ -1,10 +1,84 @@
-import React from 'react'
+import React, { useState,useEffect } from 'react'
 import AdminHeader from '../components/AdminHeader'
 import Footer from '../../components/Footer'
 import AdminSidebar from '../components/AdminSidebar'
 import { FaEdit } from 'react-icons/fa'
+import axiosInstance from '../../api/axiosInstance'
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'
+import { adminEditAPI } from '../../services/allAPI'
 
 function AdminSettings() {
+  const navigate = useNavigate()
+  const [userDetails, setUserDetails] = useState({
+    username: "",
+    password: "",
+    cPassword: "",
+    picture: "",
+    role: "",
+    bio: "",
+    id: ""
+  })
+  const [existingPicture, setExistingPicture] = useState("")
+  const [preview, setPreview] = useState("")
+  const [passwordMatch, setPasswordMatch] = useState(true)
+  const [imageFileType, setImageFileType] = useState(false)
+  useEffect(() => {
+    if (sessionStorage.getItem("user")) {
+      const user = JSON.parse(sessionStorage.getItem("user"))
+      setUserDetails({ ...userDetails, username: user.username, role: user.role, bio: user.bio, id: user._id })
+      setExistingPicture(user.picture)
+    }
+  }, [])
+    const handleUploadFile = (e) => {
+    const imageFile=e.target.files[0];
+    if (imageFile.type.startsWith("image/")) {
+      setUserDetails({ ...userDetails, picture: e.target.files[0] })
+      const url = URL.createObjectURL(e.target.files[0])
+      setPreview(url)
+      setImageFileType(true)
+    }else{
+      setImageFileType(false)
+    }
+
+
+  }
+const handlePasswordMatch=(data)=>{
+   setUserDetails({...userDetails,cPassword:data})
+   userDetails.password==data?setPasswordMatch(true):setPasswordMatch(false)
+}
+const resetProfileForm=()=>{
+  const user = JSON.parse(sessionStorage.getItem("user"))
+      setUserDetails({ picture:"", username: user.username, role: user.role, bio: user.bio, id: user._id ,password:'',cPassword:''})
+      setExistingPicture(user.picture)
+      setPreview(false)
+      setPasswordMatch(false)
+      setImageFileType(true)
+}
+const handleUpdate=async()=>{
+  const {username,password,cPassword,bio,id,picture}=userDetails
+  if(!username||!password||!cPassword){
+    toast.info("please fill the form completely")
+  }else if(passwordMatch){
+    const reqBody=new FormData()
+    for(let key in userDetails){
+    if(key!="picture"){
+       reqBody.append(key,userDetails[key])
+    }else{
+    preview?reqBody.append("picture",picture):reqBody.append("picture",existingPicture)
+    }
+    }
+    //api
+    const result=await adminEditAPI(id,reqBody)
+    console.log(result);
+    toast.success("updated successfully..plz login agin..")
+    setTimeout(() => {
+      navigate('/login')
+      sessionStorage.clear()
+    }, 2500);
+    
+  }
+}
   return (
     <>
       <AdminHeader />
@@ -38,30 +112,44 @@ function AdminSettings() {
             {/*edit form*/}
             <div className="flex justify-center items-center m-10 flex-col bg-blue-100 p-5 rounded">
               <label htmlFor="userprofile">
-                <input type="file" name="" id="userprofile" hidden />
-                <img style={{ width: '150px', height: '150px', borderRadius: '50%' }} src="https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w=" alt="" />
+                <input type="file" name="" id="userprofile" hidden onChange={(e) => handleUploadFile(e)} />
+                {
+                  existingPicture == "" ?
+                    <img style={{ width: '150px', height: '150px', borderRadius: '50%' }} src={preview ? preview : "https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w="} alt="" />
+                    :
+                    existingPicture.startsWith('https://lh3.googleusercontent.com') ?
+                      <img style={{ width: '150px', height: '150px', borderRadius: '50%' }} src={preview ? preview : existingPicture} alt="" />
+                      :
+                      <img style={{ width: '150px', height: '150px', borderRadius: '50%' }} src={preview ? preview : `${axiosInstance.defaults.baseURL}/uploads/${existingPicture}`} alt="" />
+                }
                 <FaEdit style={{ marginLeft: '80px', marginTop: '-30px' }} className='text-2xl' />
+                 {
+                  !imageFileType &&
+                  <div className='text-yellow-500 mt-5 text-sm'>* only accept image file</div>
+                }
               </label>
               <div className="mt-10 mb-3 px-5 w-full">
-                <input type="text" className="w-full border border-gray-300 rounded p-2" placeholder='Username' />
+                 <input value={userDetails.username} onChange={e=>setUserDetails({...userDetails,username:e.target.value})} type="text" className="w-full border border-gray-300 rounded p-2" placeholder='Username' />
               </div>
 
               <div className=" mb-3 px-5 w-full">
-                <input type="text" className="w-full border border-gray-300 rounded p-2" placeholder='Password ' />
+                <input value={userDetails.password}  onChange={e=>setUserDetails({...userDetails,password:e.target.value})} type="password" className="w-full border border-gray-300 rounded p-2" placeholder='Password ' />
               </div>
 
               <div className=" mb-3 px-5 w-full">
-                <input type="text" className="w-full border border-gray-300 rounded p-2" placeholder='Reset Password' />
+               <input value={userDetails.cPassword} onChange={e=>handlePasswordMatch(e.target.value)} type="password" className="w-full border border-gray-300 rounded p-2" placeholder='Reset Password' />
               </div>
+               {
+                  !passwordMatch &&
+                  <div className='text-yellow-500 mb-3 text-sm'>* password mismatch</div>
+                }
 
-              <div className=" mb-3 px-5 w-full">
-                <input type="text" className="w-full border border-gray-300 rounded p-2" placeholder='Bio' />
-              </div>
+             
               <div className="flex justify-end mt-5 px-5 w-full">
-                <button className="bg-yellow-600 text-white py-2 px-3 rounded">
+                <button className="bg-yellow-600 text-white py-2 px-3 rounded" onClick={resetProfileForm}>
                   RESET
                 </button>
-                <button className="bg-green-600 text-white py-2 ms-2 px-3 rounded">
+                <button onClick={handleUpdate} className="bg-green-600 text-white py-2 ms-2 px-3 rounded">
                   UPDATE
                 </button>
               </div>
@@ -70,6 +158,7 @@ function AdminSettings() {
         </div>
       </div>
       <Footer />
+      <ToastContainer position='top-center' theme='colored' autoClose='3000' />
     </>
   )
 }

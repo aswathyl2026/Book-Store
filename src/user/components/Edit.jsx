@@ -5,6 +5,7 @@ import axiosInstance from '../../api/axiosInstance'
 import { ToastContainer, toast } from 'react-toastify';
 import { userEditAPI } from '../../services/allAPI';
 import {useNavigate} from 'react-router-dom'
+
 function Edit() {
   const navigate=useNavigate()
   const [offCanvas, setOffCanvas] = useState(false)

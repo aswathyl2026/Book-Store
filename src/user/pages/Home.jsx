@@ -59,7 +59,7 @@ const navigate=useNavigate()
           {
             homeBook.length>0 ?
             homeBook?.map(book=>(
-              <div className="shadow rounded p-3 m-4 md:my-0">
+              <div key={book?._id} className="shadow rounded p-3 m-4 md:my-0">
             <img style={{ width: '100%', height: '300px' }} src={book?.imageURL} alt="img" />
             <div className="flex flex-col justify-center items-center mt-4">
               <h2 className="font-bold text-blue-700 text-xl">{book?.author}</h2>

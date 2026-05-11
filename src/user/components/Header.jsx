@@ -10,6 +10,16 @@ function Header() {
   const [dropdown,setDropdown]=useState(false)
   const [userId,setUserId]=useState("")
   const navigate=useNavigate()
+
+    const logout=()=>{
+      sessionStorage.clear()
+      setToggle(false)
+      setToken("")
+      setDp("")
+      setDropdown(false)
+      setUserId("")
+      navigate('/')
+    }
   useEffect(() => {
     if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
       const userToken = sessionStorage.getItem("token")
@@ -51,7 +61,7 @@ function Header() {
               dropdown &&
               <div className="absolute right-0 z-10 mt-2 w-40 bg-white shadow rounded ring-1 ring-black/5 p-2 focus:ouline-hidden">
             <Link to={`/profile/${userId}`} className='flex items-center text-sm px-3 py-2'><FaGear className='me-2'/>Profile</Link>
-            <button onClick={()=>navigate('/login')}  className='flex items-center text-sm px-3 py-2 cursor-pointer'><FaPowerOff className='me-2'/>Logout</button>
+            <button onClick={logout}  className='flex items-center text-sm px-3 py-2 cursor-pointer'><FaPowerOff className='me-2'/>Logout</button>
             </div>
             }
             
@@ -79,7 +89,7 @@ function Header() {
               dropdown &&
               <div className="absolute right-0 top-12 z-50 mt-2 w-40 bg-white text-black shadow rounded ring-1 ring-black/5 p-2 focus:ouline-hidden">
             <Link to={`/profile/${userId}`} className='flex items-center text-sm px-3 py-2'><FaGear className='me-2'/>Profile</Link>
-            <button onClick={()=>navigate('/login')} className='flex items-center text-sm px-3 py-2 cursor-pointer'><FaPowerOff className='me-2'/>Logout</button>
+            <button onClick={logout} className='flex items-center text-sm px-3 py-2 cursor-pointer'><FaPowerOff className='me-2'/>Logout</button>
             </div>
             }
             

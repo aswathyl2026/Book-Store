@@ -1,7 +1,15 @@
 import React from 'react'
 import { FaPowerOff } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
-function AdminHeader() {
+function AdminHeader()
+ {
+  const navigate=useNavigate()
+    const logout=()=>{
+      sessionStorage.clear()
+      navigate('/')
+    }
+  
   return (
     <>
     <div className="flex justify-between items-center p-3 md:px-20">
@@ -9,7 +17,7 @@ function AdminHeader() {
           <img width={'50px'} height={'50px'} src="/logo1.jpeg" alt="logo"  />
           <h1 className='text-2xl font-bold ms-2 '>BOOK STORE</h1>
         </div>
-        <button className="flex items-center px-3 py-2 bg-black text-white border border-black rounded hover:bg-white hover:text-black">
+        <button onClick={logout} className="flex items-center px-3 py-2 bg-black text-white border border-black rounded hover:bg-white hover:text-black">
           Logout<FaPowerOff className='ms-2'/>
         </button>
     </div>

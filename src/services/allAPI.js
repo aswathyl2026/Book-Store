@@ -50,3 +50,19 @@ export const viewBookAPI=async (bookId)=>{
 export const buyBookAPI=async (bookId)=>{
     return await apiService("PUT",`/books/${bookId}/buy`,{})
 }
+
+export const adminEditAPI=async (adminId,adminData)=>{
+    return await apiService("PUT",`/profile/${adminId}`,adminData)
+}
+
+export const getAllUsersAPI=async ()=>{
+    return await apiService("GET",'/users',{})
+}
+
+export const viewAllBookAPI=async ()=>{
+    return await apiService("GET",'/bookList',{})
+}
+
+export const updateBookStatusAPI=async (id)=>{
+    return await apiService("PUT",`/book/${id}`,{})
+}
