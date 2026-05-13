@@ -43,13 +43,14 @@ function Auth({ insideRegister }) {
       toast.success(`welcome ${result.data.user.username}`)
       sessionStorage.setItem("token", result.data.token)
       sessionStorage.setItem("user", JSON.stringify(result.data.user))
+      
       setTimeout(() => {
         if (result.data.user.role == 'admin') {
           navigate('/admin')
         } else {
           navigate('/')
         }
-      }, 2000);
+      }, 3000);
     } else {
       toast.error(result.response)
     }
