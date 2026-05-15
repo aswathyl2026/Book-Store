@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
+
 import Home from './user/pages/Home'
 import Profile from './user/pages/Profile'
 import Contact from './user/pages/Contact'
@@ -14,39 +15,52 @@ import Auth from './pages/Auth'
 import Pnf from './pages/Pnf'
 
 import Preloader from './components/Preloader'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import PaymentSuccess from './user/pages/PaymentSuccess'
 import PaymentFail from './user/pages/PaymentFail'
+import { routeContext } from './contextAPI/RouteGuardContext'
 function App() {
-const [isLoading,setIsLoading]=useState(true)
- 
-setTimeout(() => {
-  setIsLoading(false)
-}, 1000);
+  const [isLoading, setIsLoading] = useState(true)
+  const { role } = useContext(routeContext)
+  setTimeout(() => {
+    setIsLoading(false)
+  }, 5000);
 
 
   return (
     <>
       <Routes>
-        <Route path='/' element={isLoading?<Preloader/>:<Home />} />
+        <Route path='/' element={isLoading ? <Preloader /> : <Home />} />
         <Route path='/contact' element={<Contact />} />
-        <Route path='/books' element={<Books />} />
+        
         <Route path='/login' element={<Auth />} />
-        <Route path='/register' element={<Auth insideRegister/>} />
+        <Route path='/register' element={<Auth insideRegister />} />
 
-        <Route path='/profile/:id' element={<Profile />} />
-        <Route path='/books/:id' element={<View />} />
+        {
+          role == "user" &&
+          <>
+          <Route path='/books' element={<Books />} />
+            <Route path='/profile/:id' element={<Profile />} />
+            <Route path='/books/:id' element={<View />} />
+            <Route path='/success' element={<PaymentSuccess />} />
+            <Route path='/cancel' element={<PaymentFail />} />
+          </>
+        }
 
-        <Route path='/success' element={<PaymentSuccess />} />
-        <Route path='/cancel' element={<PaymentFail/>} />
+        {
+          role == "admin" &&
+          <>
 
-       <Route path='/admin' element={isLoading?<Preloader/>:<AdminDashboard />} /> 
-        <Route path='/admin/resource' element={<AdminResource />} /> 
-         <Route path='/admin/settings' element={<AdminSettings />} /> 
+            <Route path='/admin' element={isLoading ? <Preloader /> : <AdminDashboard />} />
+            <Route path='/admin/resource' element={<AdminResource />} />
+            <Route path='/admin/settings' element={<AdminSettings />} />
+          </>
+        }
 
-          <Route path='/*' element={<Pnf />} /> 
-      </Routes>
-      
+
+        <Route path='/*' element={<Pnf />} />
+      </Routes >
+
     </>
   )
 }

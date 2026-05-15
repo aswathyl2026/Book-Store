@@ -18,6 +18,8 @@ function View() {
   },[])
   const getViewBook=async()=>{
     const result=await viewBookAPI(id)
+    console.log(result);
+    
     setBookdetails(result.data)
   }
   //payment

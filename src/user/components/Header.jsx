@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FaBars, FaFacebook, FaInstagram, FaPowerOff, FaTwitter, FaUser } from "react-icons/fa";
 import { FaGear } from 'react-icons/fa6';
 import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '../../api/axiosInstance'
+import { routeContext } from '../../contextAPI/RouteGuardContext';
 function Header() {
   const [toggle, setToggle] = useState(false)
   const [token, setToken] = useState("")
@@ -10,9 +11,10 @@ function Header() {
   const [dropdown,setDropdown]=useState(false)
   const [userId,setUserId]=useState("")
   const navigate=useNavigate()
-
+  const {role, setRole, authorisedUser, setAuthorisedUser}=useContext(routeContext)
     const logout=()=>{
       sessionStorage.clear()
+      setAuthorisedUser(false)
       setToggle(false)
       setToken("")
       setDp("")

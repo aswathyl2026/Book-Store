@@ -66,3 +66,7 @@ export const viewAllBookAPI=async ()=>{
 export const updateBookStatusAPI=async (id)=>{
     return await apiService("PUT",`/book/${id}`,{})
 }
+//gemini ai
+export const getAIBookAPI=async (title)=>{
+    return await apiService("POST",'/book-ai',{title})
+}

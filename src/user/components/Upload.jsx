@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import { ToastContainer, toast } from 'react-toastify';
-import { bookUploadAPI } from '../../services/allAPI';
+import { bookUploadAPI, getAIBookAPI } from '../../services/allAPI';
+import useDebounce from '../../hooks/useDebounce';
 
 function Upload() {
     const [bookDetails, setBookDetails] = useState({
@@ -9,7 +10,18 @@ function Upload() {
     })
     const [preview, setPreview] = useState("")
     const [previewList, setPreviewList] = useState([])
-    console.log(bookDetails);
+    const debounceTitle=useDebounce(bookDetails.title,1000)
+    useEffect(()=>{
+     if(debounceTitle){
+        console.log("gemini api call"); 
+        getAIAbstract()
+     }
+    },[debounceTitle])
+    const getAIAbstract=async()=>{
+      const result=  await getAIBookAPI(debounceTitle)
+      setBookDetails({...bookDetails,abstract:result.data.content})
+    }
+   // console.log(bookDetails);
     const handleUploadBook = (e) => {
         const imageFile = e.target.files[0]
         const uploadBookImageArray = bookDetails.uploadImages
